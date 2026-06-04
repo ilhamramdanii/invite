@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mau Date Nggak? 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Dancing+Script:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --cream:      #FFF8F3;
+      --warm-white: #FFFAF7;
+      --blush:      #F7C5D0;
+      --rose:       #E8849A;
+      --deep-rose:  #C85470;
+      --mauve:      #A86278;
+      --text-dark:  #3A1E2C;
+      --text-mid:   #7A4A5C;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { min-height: 100vh; background: var(--cream); font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+    /* ── BG petals ── */
+    .bg-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .petal    { position: absolute; animation: floatUp linear infinite; opacity: 0; user-select: none; }
+    @keyframes floatUp {
+      0%   { transform: translateY(105vh) rotate(0deg) scale(.6); opacity: 0; }
+      8%   { opacity: .55; }
+      92%  { opacity: .3; }
+      100% { transform: translateY(-10vh) rotate(400deg) scale(1.1); opacity: 0; }
+    }
+    #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+
+    /* ── Wrapper ── */
+    .wrap {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 1.25rem; position: relative; z-index: 1;
+    }
+
+    /* ── Steps ── */
+    .step { display: none; width: 100%; max-width: 560px; flex-direction: column; align-items: center; }
+    .step.active { display: flex; animation: stepIn .55s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes stepIn {
+      from { opacity: 0; transform: translateY(28px) scale(.97); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%; background: var(--warm-white); border-radius: 28px;
+      padding: 2.75rem 2.25rem;
+      box-shadow: 0 2px 4px rgba(200,84,112,.04), 0 12px 40px rgba(200,84,112,.11), 0 0 0 1px rgba(247,197,208,.4);
+      position: relative; overflow: hidden; text-align: center;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 10%, rgba(247,197,208,.35) 0%, transparent 55%),
+                  radial-gradient(ellipse at 80% 90%, rgba(232,132,154,.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ── Typography ── */
+    .label-top  { font-family: 'Dancing Script', cursive; font-size: 1rem; color: var(--mauve); margin-bottom: .4rem; }
+    .title-main { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,2.75rem); color: var(--text-dark); line-height: 1.2; font-weight: 600; margin-bottom: 1.75rem; }
+    .title-main em { color: var(--deep-rose); font-style: italic; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.65rem,4vw,2.1rem); color: var(--text-dark); font-weight: 600; text-align: center; margin-bottom: .3rem; }
+    .section-sub   { font-family: 'Dancing Script', cursive; font-size: 1rem; color: var(--mauve); text-align: center; margin-bottom: 1.5rem; }
+    .divider { width: 64px; height: 2px; background: linear-gradient(to right, transparent, var(--blush), transparent); margin: 1rem auto 1.25rem; }
+    .hero-emoji { font-size: 3.5rem; display: block; margin-bottom: .9rem; animation: bobble 2.2s ease-in-out infinite; }
+    @keyframes bobble { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .hint { font-size: .85rem; color: var(--mauve); margin-bottom: 1.6rem; }
+
+    /* ── Name input ── */
+    .name-input {
+      width: 100%; padding: .9rem 1.2rem; border-radius: 14px;
+      border: 1.5px solid var(--blush); background: var(--cream);
+      font-family: 'Nunito', sans-serif; font-size: 1rem; color: var(--text-dark);
+      text-align: center; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      margin-bottom: 1.2rem;
+    }
+    .name-input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232,132,154,.15); }
+    .name-input::placeholder { color: var(--mauve); opacity: .65; font-style: italic; }
+
+    /* ── Buttons ── */
+    .btn-yes {
+      background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+      color: #fff; border: none; padding: .9rem 2.6rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; letter-spacing: .03em;
+      box-shadow: 0 4px 20px rgba(200,84,112,.35);
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+    }
+    .btn-yes:hover:not(:disabled)  { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 28px rgba(200,84,112,.5); }
+    .btn-yes:active:not(:disabled) { transform: scale(.97); }
+    .btn-yes:disabled { opacity: .4; cursor: not-allowed; }
+
+    #btn-no {
+      position: fixed; background: transparent; color: var(--mauve);
+      border: 1.5px solid var(--blush); padding: .9rem 2.2rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 500;
+      cursor: pointer; white-space: nowrap; z-index: 999; display: none;
+      transition: left .22s cubic-bezier(.34,1.56,.64,1), top .22s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    .btn-lanjut {
+      background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+      color: #fff; border: none; padding: .85rem 2.2rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700;
+      cursor: pointer; margin-top: 1.1rem; letter-spacing: .03em;
+      box-shadow: 0 4px 18px rgba(200,84,112,.3);
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+    }
+    .btn-lanjut:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+    .btn-lanjut:not(:disabled):hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 24px rgba(200,84,112,.45); }
+
+    /* ── Date type cards ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .9rem; width: 100%; }
+    @media (max-width: 400px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    .date-card {
+      background: var(--warm-white); border: 2px solid transparent; border-radius: 18px;
+      padding: 1.35rem .85rem; text-align: center; cursor: pointer;
+      transition: all .3s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 3px 16px rgba(200,84,112,.07); position: relative;
+    }
+    .date-card:hover  { border-color: var(--blush); transform: translateY(-4px); box-shadow: 0 10px 28px rgba(200,84,112,.18); }
+    .date-card.picked { border-color: var(--rose); background: linear-gradient(135deg,#fff5f7,#fff0f4); transform: scale(1.05); box-shadow: 0 10px 28px rgba(200,84,112,.22); }
+    .date-card.picked::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: .7rem; font-weight: 700; color: var(--deep-rose); }
+    .date-card .icon { font-size: 2.3rem; display: block; margin-bottom: .6rem; }
+    .date-card .lbl  { font-size: .82rem; font-weight: 700; color: var(--text-dark); }
+
+    /* ── Calendar ── */
+    .cal-wrapper { width: 100%; background: var(--warm-white); border-radius: 20px; padding: 1.1rem 1rem 1rem; box-shadow: 0 3px 16px rgba(200,84,112,.08); }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .85rem; padding: 0 .2rem; }
+    .cal-nav {
+      width: 32px; height: 32px; border-radius: 50%; background: none; border: none;
+      cursor: pointer; font-size: 1.1rem; color: var(--mauve);
+      display: flex; align-items: center; justify-content: center; transition: background .15s;
+    }
+    .cal-nav:hover { background: rgba(247,197,208,.5); }
+    .cal-month-label { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: var(--text-dark); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-dname { text-align: center; font-size: .62rem; font-weight: 700; color: var(--mauve); padding-bottom: .55rem; letter-spacing: .04em; text-transform: uppercase; }
+    .cal-cell { position: relative; display: flex; align-items: center; justify-content: center; padding: 2px 0; }
+    .cal-cell.in-range::before,
+    .cal-cell.range-start::before,
+    .cal-cell.range-end::before { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 32px; background: rgba(247,197,208,.38); z-index: 0; }
+    .cal-cell.in-range::before    { left: 0; right: 0; }
+    .cal-cell.range-start::before { left: 50%; right: 0; }
+    .cal-cell.range-end::before   { left: 0; right: 50%; }
+    .cal-cell.range-start.range-end::before { display: none; }
+    .cal-day {
+      width: 32px; height: 32px; border-radius: 50%; border: none; background: none; cursor: pointer;
+      font-size: .82rem; font-family: 'Nunito', sans-serif; font-weight: 500; color: var(--text-dark);
+      position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s, transform .12s;
+    }
+    .cal-day:hover:not(:disabled) { background: rgba(247,197,208,.65); transform: scale(1.1); }
+    .cal-day:disabled { color: #d4c0c8; cursor: default; }
+    .cal-day.is-today:not(.sel-start):not(.sel-end) { border: 1.5px solid var(--blush); color: var(--deep-rose); font-weight: 700; }
+    .cal-day.sel-start, .cal-day.sel-end { background: var(--deep-rose) !important; color: #fff !important; font-weight: 700; box-shadow: 0 2px 10px rgba(200,84,112,.4); transform: scale(1.08); }
+    .cal-range-info { text-align: center; margin-top: .85rem; font-size: .83rem; color: var(--mauve); min-height: 1.4em; line-height: 1.5; }
+    .cal-range-info strong { color: var(--deep-rose); }
+
+    /* ── Confirmation ── */
+    .big-heart { font-size: 5rem; display: block; animation: heartbeat 1.3s ease-in-out infinite; margin-bottom: .5rem; }
+    @keyframes heartbeat { 0%,100% { transform: scale(1); } 14% { transform: scale(1.18); } 28% { transform: scale(1); } 42% { transform: scale(1.1); } 70% { transform: scale(1); } }
+    .confirm-title { font-family: 'Dancing Script', cursive; font-size: 2.3rem; color: var(--deep-rose); margin-bottom: .4rem; }
+    .confirm-body  { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 1.2rem; }
+    .confirm-box   { background: rgba(247,197,208,.2); border-radius: 16px; padding: 1rem 1.3rem; margin-bottom: 1rem; text-align: left; }
+    .confirm-row   { display: flex; align-items: flex-start; gap: .6rem; font-size: .88rem; color: var(--text-dark); padding: .35rem 0; }
+    .confirm-row + .confirm-row { border-top: 1px solid rgba(247,197,208,.45); }
+    .confirm-row strong { color: var(--deep-rose); }
+    .confirm-note  { font-family: 'Dancing Script', cursive; font-size: 1.2rem; color: var(--mauve); margin-bottom: 1.2rem; display: block; }
+
+    /* ── Countdown ── */
+    .cd-wrap {
+      background: linear-gradient(135deg, rgba(247,197,208,.25), rgba(232,132,154,.1));
+      border: 1px solid rgba(247,197,208,.6);
+      border-radius: 16px; padding: .85rem 1rem; margin-bottom: 1.2rem;
+    }
+    .cd-label { font-family: 'Dancing Script', cursive; font-size: .95rem; color: var(--mauve); margin-bottom: .5rem; display: block; }
+    .cd-grid  { display: flex; justify-content: center; align-items: flex-end; gap: .3rem; }
+    .cd-unit  { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
+    .cd-num   { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--deep-rose); line-height: 1; }
+    .cd-lbl   { font-size: .6rem; font-weight: 700; color: var(--mauve); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+    .cd-sep   { font-size: 1.5rem; color: var(--rose); font-weight: 700; padding-bottom: .5rem; }
+    .cd-done  { font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: var(--deep-rose); }
+
+    /* ── Share buttons ── */
+    .share-group { display: flex; gap: .7rem; justify-content: center; flex-wrap: wrap; }
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: #25D366; color: #fff; border: none;
+      padding: .82rem 1.5rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 700;
+      cursor: pointer; box-shadow: 0 4px 18px rgba(37,211,102,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-wa:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 24px rgba(37,211,102,.5); }
+    .btn-copy {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: transparent; color: var(--mauve); border: 1.5px solid var(--blush);
+      padding: .82rem 1.3rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 600; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-copy:hover { border-color: var(--rose); color: var(--deep-rose); }
+    .btn-copy.copied { border-color: #25D366; color: #25D366; }
+
+    /* ── Secondary actions ── */
+    .action-row { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin-top: .75rem; }
+    .btn-sm {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: rgba(247,197,208,.2); color: var(--text-mid);
+      border: 1px solid var(--blush); padding: .55rem 1.1rem; border-radius: 50px;
+      font-family: 'Nunito', sans-serif; font-size: .82rem; font-weight: 600; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-sm:hover { background: rgba(247,197,208,.45); border-color: var(--rose); color: var(--deep-rose); }
+    .btn-sm.saving { opacity: .6; cursor: wait; }
+
+    /* ── Time picker ── */
+    .time-picker-wrap {
+      width: 100%; margin-top: 1rem;
+      background: var(--warm-white); border-radius: 20px;
+      padding: 1rem 1.1rem 1.1rem;
+      box-shadow: 0 3px 16px rgba(200,84,112,.08);
+    }
+    .time-picker-label {
+      font-family: 'Dancing Script', cursive; font-size: .95rem;
+      color: var(--mauve); display: block; margin-bottom: .75rem; text-align: center;
+    }
+    .time-picker {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .time-unit {
+      display: flex; flex-direction: column; align-items: center; gap: .3rem;
+    }
+    .time-spin-btn {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: rgba(247,197,208,.4); color: var(--deep-rose);
+      font-size: 1.1rem; font-weight: 700; cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, transform .12s;
+    }
+    .time-spin-btn:hover { background: rgba(247,197,208,.8); transform: scale(1.1); }
+    .time-spin-btn:active { transform: scale(.93); }
+    .time-display {
+      font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600;
+      color: var(--text-dark); min-width: 2.4ch; text-align: center; line-height: 1;
+    }
+    .time-colon {
+      font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600;
+      color: var(--rose); padding-bottom: .25rem; line-height: 1;
+    }
+    .time-unit-label {
+      font-size: .6rem; font-weight: 700; color: var(--mauve);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .time-quick {
+      display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; margin-top: .8rem;
+    }
+    .time-chip {
+      background: rgba(247,197,208,.25); border: 1.5px solid var(--blush);
+      color: var(--text-mid); border-radius: 50px; padding: .3rem .75rem;
+      font-family: 'Nunito', sans-serif; font-size: .78rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .time-chip:hover    { background: rgba(247,197,208,.55); border-color: var(--rose); color: var(--deep-rose); }
+    .time-chip.selected { background: linear-gradient(135deg,var(--rose),var(--deep-rose)); border-color: transparent; color: #fff; }
+
+    /* ── Custom activity input ── */
+    .custom-activity-wrap {
+      width: 100%; margin-top: 1rem;
+      background: rgba(247,197,208,.12);
+      border: 1.5px dashed var(--blush);
+      border-radius: 18px; padding: .95rem 1.1rem;
+    }
+    .custom-activity-label {
+      font-family: 'Dancing Script', cursive; font-size: .95rem;
+      color: var(--mauve); display: block; margin-bottom: .6rem; text-align: center;
+    }
+    .custom-activity-row {
+      display: flex; gap: .5rem; align-items: center;
+    }
+    .custom-activity-input {
+      flex: 1; padding: .65rem 1rem; border-radius: 50px;
+      border: 1.5px solid var(--blush); background: var(--warm-white);
+      font-family: 'Nunito', sans-serif; font-size: .9rem; color: var(--text-dark);
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .custom-activity-input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232,132,154,.15); }
+    .custom-activity-input::placeholder { color: var(--mauve); opacity: .6; font-style: italic; }
+    .btn-add-activity {
+      width: 36px; height: 36px; border-radius: 50%; border: none; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+      color: #fff; font-size: 1.3rem; font-weight: 700; cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 12px rgba(200,84,112,.3);
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+    }
+    .btn-add-activity:hover:not(:disabled) { transform: scale(1.1); box-shadow: 0 5px 16px rgba(200,84,112,.45); }
+    .btn-add-activity:disabled { opacity: .35; cursor: not-allowed; }
+    .custom-tags {
+      display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem;
+    }
+    .custom-tag {
+      display: inline-flex; align-items: center; gap: .3rem;
+      background: linear-gradient(135deg,rgba(247,197,208,.4),rgba(232,132,154,.2));
+      border: 1.5px solid var(--rose); border-radius: 50px;
+      padding: .28rem .7rem .28rem .85rem;
+      font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 600; color: var(--deep-rose);
+    }
+    .custom-tag-del {
+      background: none; border: none; cursor: pointer; color: var(--rose);
+      font-size: .85rem; line-height: 1; padding: 0; margin-left: .1rem;
+      transition: color .15s, transform .15s;
+    }
+    .custom-tag-del:hover { color: var(--deep-rose); transform: scale(1.2); }
+
+    /* ══════════════════════════════
+       MOBILE RESPONSIVE
+    ══════════════════════════════ */
+
+    /* Touch-friendly tap targets everywhere */
+    button { touch-action: manipulation; }
+    input  { touch-action: manipulation; }
+
+    /* ── Small phones (≤ 480px) ── */
+    @media (max-width: 480px) {
+
+      /* Layout */
+      .wrap {
+        min-height: 100dvh;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: max(1.25rem, env(safe-area-inset-top)) 1rem
+                 calc(1.5rem + env(safe-area-inset-bottom));
+      }
+      .step { max-width: 100%; gap: .6rem; }
+
+      /* Card */
+      .card { padding: 1.75rem 1.2rem; border-radius: 20px; }
+
+      /* Typography */
+      .section-title { margin-bottom: .15rem; }
+      .section-sub   { margin-bottom: 1rem; font-size: .92rem; }
+      .label-top     { font-size: .88rem; }
+      .title-main    { font-size: clamp(1.75rem, 7vw, 2.2rem); margin-bottom: 1.3rem; }
+      .hint          { font-size: .8rem; margin-bottom: 1.2rem; }
+
+      /* Buttons – full width & bigger tap target */
+      .btn-yes    { width: 100%; padding: 1rem; font-size: 1rem; }
+      .btn-lanjut { width: 100%; padding: 1rem; font-size: .95rem; margin-top: .85rem; }
+
+      /* Prevent iOS zoom on input focus */
+      .custom-activity-input,
+      .name-input { font-size: 16px; }
+
+      /* Activity grid – 2 cols on mobile */
+      .cards-grid { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+      .date-card  { padding: 1rem .6rem; border-radius: 14px; }
+      .date-card .icon { font-size: 2rem; margin-bottom: .4rem; }
+      .date-card .lbl  { font-size: .78rem; }
+
+      /* Calendar – bigger touch targets */
+      .cal-wrapper { padding: .9rem .5rem .9rem; }
+      .cal-day  { width: 38px; height: 38px; font-size: .85rem; }
+      .cal-cell { padding: 1px 0; }
+      .cal-cell.in-range::before,
+      .cal-cell.range-start::before,
+      .cal-cell.range-end::before { height: 38px; }
+      .cal-dname    { font-size: .58rem; padding-bottom: .45rem; }
+      .cal-nav      { width: 36px; height: 36px; font-size: 1.3rem; }
+      .cal-range-info { font-size: .8rem; }
+
+      /* Time picker – bigger spin buttons */
+      .time-picker-wrap { padding: .85rem .85rem 1rem; }
+      .time-spin-btn    { width: 42px; height: 42px; font-size: 1.25rem; }
+      .time-display     { font-size: 2.4rem; min-width: 2.6ch; }
+      .time-colon       { font-size: 2.4rem; }
+      .time-chip        { padding: .35rem .7rem; font-size: .77rem; }
+
+      /* Custom activity */
+      .custom-activity-wrap  { padding: .85rem .9rem; }
+      .btn-add-activity      { width: 42px; height: 42px; font-size: 1.4rem; }
+
+      /* Confirmation */
+      .big-heart     { font-size: 4rem; }
+      .confirm-title { font-size: 2rem; }
+      .confirm-body  { font-size: 1.1rem; }
+      .confirm-row   { font-size: .84rem; }
+      .confirm-note  { font-size: 1.05rem; }
+      .confirm-box   { padding: .85rem 1rem; }
+
+      /* Countdown */
+      .cd-num  { font-size: 1.65rem; }
+      .cd-unit { min-width: 38px; }
+      .cd-sep  { font-size: 1.3rem; }
+
+      /* Share & action buttons – stack vertically */
+      .share-group { flex-direction: column; gap: .6rem; }
+      .btn-wa, .btn-copy {
+        width: 100%; justify-content: center;
+        padding: .9rem 1rem;
+      }
+      .action-row { gap: .5rem; }
+      .btn-sm { flex: 1; justify-content: center; font-size: .8rem; padding: .6rem .8rem; }
+    }
+
+    /* ── Very small phones (≤ 360px) ── */
+    @media (max-width: 360px) {
+      .wrap { padding-left: .75rem; padding-right: .75rem; }
+      .cal-day { width: 34px; height: 34px; font-size: .78rem; }
+      .cal-cell.in-range::before,
+      .cal-cell.range-start::before,
+      .cal-cell.range-end::before { height: 34px; }
+      .time-display { font-size: 2rem; }
+      .time-colon   { font-size: 2rem; }
+      .cd-num       { font-size: 1.45rem; }
+      .cd-unit      { min-width: 32px; }
+    }
+
+    /* ── Landscape mobile ── */
+    @media (max-width: 812px) and (orientation: landscape) and (max-height: 430px) {
+      .wrap { justify-content: flex-start; padding-top: .75rem; }
+      .hero-emoji   { font-size: 2.2rem; margin-bottom: .5rem; }
+      .title-main   { font-size: 1.8rem; margin-bottom: 1rem; }
+      .big-heart    { font-size: 3rem; margin-bottom: .3rem; }
+      .cd-num       { font-size: 1.4rem; }
+      .section-sub  { margin-bottom: .7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer" id="bgLayer"></div>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+
+  <!-- ── STEP 1: Invitation ── -->
+  <div class="step active" id="s1">
+    <div class="card">
+      <span class="hero-emoji">🌸</span>
+      <p class="label-top">psst, ada undangan spesial buat kamu~</p>
+      <h1 class="title-main">sayang, mau nemenin<br>aku <em>date nggak?</em></h1>
+      <div class="divider"></div>
+      <p class="hint">pilih dengan bijak ya 🥺</p>
+      <button class="btn-yes" id="btn-yes-s1" onclick="nextStep(2)">✨ Iya dong!</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Date type (multi-select) ── -->
+  <div class="step" id="s2">
+    <p class="section-title">Mau ngapain aja<br>bareng aku? 💭</p>
+    <p class="section-sub">boleh pilih lebih dari satu lho!</p>
+    <div class="cards-grid">
+      <div class="date-card" onclick="pickDate(this,'Cafe Cozy ☕')">
+        <span class="icon">☕</span><span class="lbl">Cafe Cozy</span>
+      </div>
+      <div class="date-card" onclick="pickDate(this,'Nonton Bioskop 🎬')">
+        <span class="icon">🎬</span><span class="lbl">Nonton Bioskop</span>
+      </div>
+      <div class="date-card" onclick="pickDate(this,'Jalan-jalan Sore 🌅')">
+        <span class="icon">🌅</span><span class="lbl">Jalan-jalan Sore</span>
+      </div>
+      <div class="date-card" onclick="pickDate(this,'Fine Dining 🍽️')">
+        <span class="icon">🍽️</span><span class="lbl">Fine Dining</span>
+      </div>
+      <div class="date-card" onclick="pickDate(this,'Piknik di Taman 🧺')">
+        <span class="icon">🧺</span><span class="lbl">Piknik di Taman</span>
+      </div>
+      <div class="date-card" onclick="pickDate(this,'Road Trip 🚗')">
+        <span class="icon">🚗</span><span class="lbl">Road Trip</span>
+      </div>
+    </div>
+    <!-- Custom activity -->
+    <div class="custom-activity-wrap">
+      <span class="custom-activity-label">✍️ atau mau ngapain lagi? tulis sendiri~</span>
+      <div class="custom-activity-row">
+        <input
+          class="custom-activity-input"
+          id="custom-activity-input"
+          type="text"
+          placeholder="misal: staycation, ke pantai..."
+          maxlength="40"
+          onkeydown="if(event.key==='Enter') addCustomActivity()"
+          oninput="document.getElementById('btn-add-act').disabled = !this.value.trim()"
+        />
+        <button class="btn-add-activity" id="btn-add-act" disabled onclick="addCustomActivity()">+</button>
+      </div>
+      <div class="custom-tags" id="custom-tags"></div>
+    </div>
+
+    <button class="btn-lanjut" id="btn-lanjut-s2" disabled onclick="nextStep(3)">
+      Pilih dulu yuk~ 💕
+    </button>
+  </div>
+
+  <!-- ── STEP 3: Calendar range ── -->
+  <div class="step" id="s3">
+    <p class="section-title">Pilih tanggalnya<br>yuk! 📅</p>
+    <p class="section-sub">dari tanggal berapa sampai berapa?</p>
+    <div class="cal-wrapper">
+      <div id="cal-render"></div>
+      <p class="cal-range-info" id="cal-info">pilih tanggal mulai 📅</p>
+    </div>
+
+    <!-- Time picker -->
+    <div class="time-picker-wrap">
+      <span class="time-picker-label">⏰ mulai jam berapa?</span>
+      <div class="time-picker">
+        <div class="time-unit">
+          <button class="time-spin-btn" onclick="adjustTime('hour',1)">▲</button>
+          <span class="time-display" id="tp-hour">09</span>
+          <button class="time-spin-btn" onclick="adjustTime('hour',-1)">▼</button>
+          <span class="time-unit-label">jam</span>
+        </div>
+        <span class="time-colon">:</span>
+        <div class="time-unit">
+          <button class="time-spin-btn" onclick="adjustTime('min',1)">▲</button>
+          <span class="time-display" id="tp-min">00</span>
+          <button class="time-spin-btn" onclick="adjustTime('min',-1)">▼</button>
+          <span class="time-unit-label">menit</span>
+        </div>
+      </div>
+      <div class="time-quick" id="time-chips">
+        <button class="time-chip" onclick="setTimeQuick(8,0)">08:00</button>
+        <button class="time-chip" onclick="setTimeQuick(9,0)">09:00</button>
+        <button class="time-chip" onclick="setTimeQuick(10,30)">10:30</button>
+        <button class="time-chip" onclick="setTimeQuick(13,0)">13:00</button>
+        <button class="time-chip" onclick="setTimeQuick(15,0)">15:00</button>
+        <button class="time-chip" onclick="setTimeQuick(17,0)">17:00</button>
+        <button class="time-chip" onclick="setTimeQuick(19,0)">19:00</button>
+        <button class="time-chip" onclick="setTimeQuick(20,0)">20:00</button>
+      </div>
+    </div>
+
+    <button class="btn-lanjut" id="btn-lanjut-s3" disabled onclick="confirmDate()">
+      Lanjut →
+    </button>
+  </div>
+
+  <!-- ── STEP 4: Confirmation ── -->
+  <div class="step" id="s4">
+    <div class="card" id="confirm-card">
+      <span class="big-heart">💖</span>
+      <p class="confirm-title">Yaaay! It's a date!</p>
+      <p class="confirm-body" id="confirm-body">Aku udah nggak sabar<br>buat ketemu kamu 🥰</p>
+      <div class="confirm-box" id="confirmBox"></div>
+
+      <!-- Countdown -->
+      <div class="cd-wrap">
+        <span class="cd-label">⏳ hitung mundur ke hari H</span>
+        <div id="countdown"></div>
+      </div>
+
+      <p class="confirm-note">sampai ketemu ya, cinta 🌸✨</p>
+
+      <div class="share-group">
+        <button class="btn-wa" onclick="shareWA()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Kirim via WhatsApp
+        </button>
+        <button class="btn-copy" id="btn-copy" onclick="copyInfo()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="copy-label">Copy teks</span>
+        </button>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-sm" id="btn-save-img" onclick="saveAsImage()">
+          📸 Simpan gambar
+        </button>
+        <button class="btn-sm" onclick="resetAll()">
+          🔄 Mulai ulang
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<button id="btn-no">Nggak deh 🙅</button>
+
+<script>
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
+let pickedDates      = [];
+let customActivities = [];
+let countdownTimer   = null;
+let noReady          = false;
+
+const TODAY = new Date();
+TODAY.setHours(0, 0, 0, 0);
+
+const cal = {
+  year:  TODAY.getFullYear(),
+  month: TODAY.getMonth(),
+  start: null,
+  end:   null,
+  hour:  9,
+  min:   0,
+};
+
+/* ══════════════════════════════
+   BG PETALS
+══════════════════════════════ */
+const BG = document.getElementById('bgLayer');
+['💕','🌸','✨','💗','🌷','💓','🌺','💞','🎀'].forEach((e, i) => {
+  const el = document.createElement('div');
+  el.className = 'petal';
+  el.textContent = e;
+  Object.assign(el.style, {
+    left: `${i * 11 + Math.random() * 6}%`,
+    fontSize: `${.7 + Math.random() * 1.3}rem`,
+    animationDuration: `${9 + Math.random() * 13}s`,
+    animationDelay: `${-Math.random() * 15}s`,
+  });
+  BG.appendChild(el);
+});
+
+/* ══════════════════════════════
+   NO BUTTON — ESCAPE
+══════════════════════════════ */
+const btnNo  = document.getElementById('btn-no');
+const btnYes = document.getElementById('btn-yes-s1');
+
+const isMobile = () => window.innerWidth <= 480 || ('ontouchstart' in window && window.innerWidth <= 768);
+
+function placeNoNearYes() {
+  const r   = btnYes.getBoundingClientRect();
+  const noH = btnNo.offsetHeight || 44;
+  const noW = btnNo.offsetWidth  || 130;
+
+  if (isMobile()) {
+    /* on mobile: place below the yes button, centred */
+    btnNo.style.position = 'fixed';
+    btnNo.style.left = `${r.left + (r.width - noW) / 2}px`;
+    btnNo.style.top  = `${r.bottom + 14}px`;
+  } else {
+    /* desktop: start to the right */
+    btnNo.style.left = `${r.right + 14}px`;
+    btnNo.style.top  = `${r.top + (r.height - noH) / 2}px`;
+  }
+  btnNo.style.display = 'block';
+  noReady = true;
+}
+
+window.addEventListener('load',   () => setTimeout(placeNoNearYes, 80));
+window.addEventListener('resize', () => {
+  if (document.getElementById('s1').classList.contains('active')) {
+    noReady = false; setTimeout(placeNoNearYes, 80);
+  }
+});
+
+function randPos() {
+  const pad = 70, w = btnNo.offsetWidth || 130, h = btnNo.offsetHeight || 44;
+  return {
+    x: pad + Math.random() * (window.innerWidth  - w - pad * 2),
+    y: pad + Math.random() * (window.innerHeight - h - pad * 2),
+  };
+}
+
+document.addEventListener('mousemove', e => {
+  if (!noReady || !document.getElementById('s1').classList.contains('active')) return;
+  const r = btnNo.getBoundingClientRect();
+  if (Math.hypot(e.clientX - r.left - r.width/2, e.clientY - r.top - r.height/2) < 130) {
+    const p = randPos(); btnNo.style.left = p.x + 'px'; btnNo.style.top = p.y + 'px';
+  }
+});
+document.addEventListener('touchmove', e => {
+  if (!noReady || !document.getElementById('s1').classList.contains('active')) return;
+  const t = e.touches[0], r = btnNo.getBoundingClientRect();
+  if (Math.hypot(t.clientX - r.left - r.width/2, t.clientY - r.top - r.height/2) < 90) {
+    const p = randPos(); btnNo.style.left = p.x + 'px'; btnNo.style.top = p.y + 'px';
+  }
+}, { passive: true });
+
+/* ══════════════════════════════
+   STEP NAVIGATION
+══════════════════════════════ */
+function nextStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  btnNo.style.display = 'none'; noReady = false;
+  if (n === 1) setTimeout(placeNoNearYes, 80);
+  if (n === 3) { cal.start = null; cal.end = null; renderCal(); renderTime(); }
+}
+
+/* ══════════════════════════════
+   STEP 2 — MULTI-SELECT + CUSTOM
+══════════════════════════════ */
+function updateS2Button() {
+  const total = pickedDates.length + customActivities.length;
+  const btn = document.getElementById('btn-lanjut-s2');
+  btn.disabled    = total === 0;
+  btn.textContent = total > 0 ? `Lanjut (${total} dipilih) →` : 'Pilih dulu yuk~ 💕';
+}
+
+function addCustomActivity() {
+  const input = document.getElementById('custom-activity-input');
+  const val   = input.value.trim();
+  if (!val) return;
+  customActivities.push(val);
+  input.value = '';
+  document.getElementById('btn-add-act').disabled = true;
+  renderCustomTags();
+  updateS2Button();
+}
+
+function removeCustomActivity(idx) {
+  customActivities.splice(idx, 1);
+  renderCustomTags();
+  updateS2Button();
+}
+
+function renderCustomTags() {
+  const container = document.getElementById('custom-tags');
+  container.innerHTML = customActivities.map((a, i) =>
+    `<span class="custom-tag">✨ ${a}<button class="custom-tag-del" onclick="removeCustomActivity(${i})" title="Hapus">✕</button></span>`
+  ).join('');
+}
+
+function pickDate(el, val) {
+  const idx = pickedDates.indexOf(val);
+  if (idx === -1) { pickedDates.push(val); el.classList.add('picked'); }
+  else            { pickedDates.splice(idx, 1); el.classList.remove('picked'); }
+  updateS2Button();
+}
+
+/* ══════════════════════════════
+   STEP 3 — CALENDAR
+══════════════════════════════ */
+const MONTHS_ID  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const DAYS_ID    = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const DAYS_FULL  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const MONS_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+function fmtDate(d) {
+  return `${DAYS_FULL[d.getDay()]}, ${d.getDate()} ${MONS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function renderCal() {
+  const { year, month } = cal;
+  const firstDow  = new Date(year, month, 1).getDay();
+  const daysInMon = new Date(year, month + 1, 0).getDate();
+  const startMs   = cal.start ? cal.start.getTime() : null;
+  const endMs     = cal.end   ? cal.end.getTime()   : null;
+
+  let html = `
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+      <span class="cal-month-label">${MONTHS_ID[month]} ${year}</span>
+      <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+    </div>
+    <div class="cal-grid">
+  `;
+  DAYS_ID.forEach(d => { html += `<div class="cal-dname">${d}</div>`; });
+  for (let i = 0; i < firstDow; i++) html += `<div class="cal-cell"></div>`;
+
+  for (let d = 1; d <= daysInMon; d++) {
+    const date  = new Date(year, month, d);
+    date.setHours(0, 0, 0, 0);
+    const ms      = date.getTime();
+    const isPast  = ms < TODAY.getTime();
+    const isToday = ms === TODAY.getTime();
+    const isStart = startMs === ms;
+    const isEnd   = endMs   === ms;
+    const inRange = startMs && endMs && ms > startMs && ms < endMs;
+
+    let cellClass = 'cal-cell';
+    if (isStart && endMs)   cellClass += ' range-start';
+    if (isEnd   && startMs) cellClass += ' range-end';
+    if (inRange)            cellClass += ' in-range';
+
+    let btnClass = 'cal-day';
+    if (isToday && !isStart && !isEnd) btnClass += ' is-today';
+    if (isStart) btnClass += ' sel-start';
+    if (isEnd)   btnClass += ' sel-end';
+
+    html += `<div class="${cellClass}"><button class="${btnClass}" ${isPast?'disabled':''} ${isPast?'':
+      `onclick="calClick(${year},${month},${d})"`}>${d}</button></div>`;
+  }
+  html += '</div>';
+  document.getElementById('cal-render').innerHTML = html;
+
+  let info = '';
+  if (!cal.start)     info = 'pilih tanggal mulai 📅';
+  else if (!cal.end)  info = `Mulai: <strong>${fmtDate(cal.start)}</strong> — pilih tanggal selesai`;
+  else                info = `<strong>${fmtDate(cal.start)}</strong> → <strong>${fmtDate(cal.end)}</strong>`;
+  document.getElementById('cal-info').innerHTML = info;
+
+  const lanjut = document.getElementById('btn-lanjut-s3');
+  if (lanjut) lanjut.disabled = !(cal.start && cal.end);
+}
+
+function calNav(dir) {
+  cal.month += dir;
+  if (cal.month < 0)  { cal.month = 11; cal.year--; }
+  if (cal.month > 11) { cal.month = 0;  cal.year++; }
+  renderCal();
+}
+
+function calClick(y, m, d) {
+  const clicked = new Date(y, m, d);
+  clicked.setHours(0, 0, 0, 0);
+  if (!cal.start || (cal.start && cal.end) || clicked < cal.start) {
+    cal.start = clicked; cal.end = null;
+  } else {
+    cal.end = clicked;
+  }
+  renderCal();
+}
+
+function adjustTime(unit, delta) {
+  if (unit === 'hour') {
+    cal.hour = (cal.hour + delta + 24) % 24;
+  } else {
+    cal.min = (cal.min + delta + 60) % 60;
+  }
+  renderTime();
+}
+
+function setTimeQuick(h, m) {
+  cal.hour = h; cal.min = m;
+  renderTime();
+}
+
+function renderTime() {
+  document.getElementById('tp-hour').textContent = String(cal.hour).padStart(2, '0');
+  document.getElementById('tp-min').textContent  = String(cal.min).padStart(2, '0');
+  const timeStr = `${String(cal.hour).padStart(2,'0')}:${String(cal.min).padStart(2,'0')}`;
+  document.querySelectorAll('.time-chip').forEach(chip => {
+    chip.classList.toggle('selected', chip.textContent.trim() === timeStr);
+  });
+}
+
+function confirmDate() {
+  nextStep(4);
+  buildConfirm();
+  startCountdown();
+  fireConfetti();
+}
+
+/* ══════════════════════════════
+   STEP 4 — CONFIRM + COUNTDOWN
+══════════════════════════════ */
+function buildConfirm() {
+  const allActivities = [
+    ...pickedDates,
+    ...customActivities.map(a => `${a} ✨`),
+  ];
+  const actRows = allActivities.map(a =>
+    `<div class="confirm-row"><span>✨</span><span>${a}</span></div>`
+  ).join('');
+  const dateStr = cal.end
+    ? `${fmtDate(cal.start)} – ${fmtDate(cal.end)}`
+    : fmtDate(cal.start);
+
+  document.getElementById('confirm-body').innerHTML =
+    `Dia pasti seneng banget<br>dapet kabar ini! 🥰`;
+
+  document.getElementById('confirmBox').innerHTML = `
+    <div class="confirm-row"><span>🎉</span><span><strong>Date-nya udah fix!</strong></span></div>
+    <div class="confirm-row"><span>🎯</span><span><strong>Rencana kita:</strong></span></div>
+    ${actRows}
+    <div class="confirm-row"><span>📅</span><span>Tanggal: <strong>${dateStr}</strong></span></div>
+    <div class="confirm-row"><span>⏰</span><span>Mulai jam: <strong>${String(cal.hour).padStart(2,'0')}:${String(cal.min).padStart(2,'0')} WIB</strong></span></div>
+  `;
+}
+
+function startCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  if (!cal.start) return;
+  const target = new Date(cal.start);
+  target.setHours(cal.hour, cal.min, 0, 0);
+
+  function tick() {
+    const diff = target - new Date();
+    const el   = document.getElementById('countdown');
+    if (!el) return;
+
+    if (diff <= 0) {
+      el.innerHTML = `<p class="cd-done">🎉 Hari ini saatnya date!</p>`;
+      clearInterval(countdownTimer);
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hrs  = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    el.innerHTML = `
+      <div class="cd-grid">
+        <div class="cd-unit"><span class="cd-num">${days}</span><span class="cd-lbl">hari</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${String(hrs).padStart(2,'0')}</span><span class="cd-lbl">jam</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${String(mins).padStart(2,'0')}</span><span class="cd-lbl">menit</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${String(secs).padStart(2,'0')}</span><span class="cd-lbl">detik</span></div>
+      </div>`;
+  }
+  tick();
+  countdownTimer = setInterval(tick, 1000);
+}
+
+/* ══════════════════════════════
+   WA + COPY
+══════════════════════════════ */
+const WA_NUMBER = '6282124530097';
+
+const ACT_DESC = {
+  'Cafe Cozy ☕':        'Ngopi lucu di cafe ☕',
+  'Nonton Bioskop 🎬':   'Nonton bioskop 🎬',
+  'Jalan-jalan Sore 🌅': 'Hunting sunset sore-sore 🌅',
+  'Fine Dining 🍽️':      'Makan mewah bareng 🍽️',
+  'Piknik di Taman 🧺':  'Piknik santai di taman 🧺',
+  'Road Trip 🚗':        'Road trip keliling kota 🚗',
+};
+
+function naturalDay(date) {
+  const diff    = Math.round((date - TODAY) / 86400000);
+  const dayName = DAYS_FULL[date.getDay()];
+  if (diff === 0) return 'hari ini';
+  if (diff === 1) return `${dayName} besok`;
+  if (diff === 2) return `${dayName} lusa`;
+  if (diff <= 6)  return `${dayName} ini`;
+  return `${dayName}, ${date.getDate()} ${MONS_SHORT[date.getMonth()]}`;
+}
+
+function buildMessage() {
+  const allActs  = [...pickedDates, ...customActivities];
+  const actLines = allActs.map(a => `• ${ACT_DESC[a] || a}`).join('\n');
+  const startDay     = naturalDay(cal.start);
+  const endDay       = cal.end ? naturalDay(cal.end) : null;
+  const datePhrase   = endDay ? `dari ${startDay} sampai ${endDay}` : startDay;
+  const startDayName = DAYS_FULL[cal.start.getDay()];
+
+  const timeStr = `${String(cal.hour).padStart(2,'0')}:${String(cal.min).padStart(2,'0')} WIB`;
+
+  return (
+    `💕 *IT'S A DATE!* 💕\n\n` +
+    `Helloow sayang, iya aku mau banget date sama kamu! 🥰\n` +
+    `Aku udah milih nih rencanya buat activity kita:\n\n` +
+    `${actLines}\n\n` +
+    `Waktunya: ${datePhrase}\n` +
+    `Mulai jam: *${timeStr}*\n\n` +
+    `Pokoknya aku ga bisa nolak ini, hehe.\nCan't wait ketemu kamu nanti ${startDayName}! 🌸 🤍`
+  );
+}
+
+function shareWA() {
+  window.open(
+    `https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encodeURIComponent(buildMessage())}`,
+    '_blank'
+  );
+}
+
+function copyInfo() {
+  navigator.clipboard.writeText(buildMessage()).then(() => {
+    const label = document.getElementById('copy-label');
+    const btn   = document.getElementById('btn-copy');
+    label.textContent = 'Tersalin! ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { label.textContent = 'Copy teks'; btn.classList.remove('copied'); }, 2200);
+  });
+}
+
+/* ══════════════════════════════
+   SAVE AS IMAGE
+══════════════════════════════ */
+function saveAsImage() {
+  if (typeof html2canvas === 'undefined') {
+    alert('Butuh koneksi internet untuk fitur ini 🙏');
+    return;
+  }
+  const btn  = document.getElementById('btn-save-img');
+  btn.classList.add('saving');
+  btn.textContent = '⏳ Menyimpan...';
+
+  const card = document.getElementById('confirm-card');
+  html2canvas(card, { scale: 2.5, backgroundColor: '#FFFAF7', useCORS: true, logging: false })
+    .then(canvas => {
+      const link    = document.createElement('a');
+      link.download = 'date-invitation.png';
+      link.href     = canvas.toDataURL('image/png');
+      link.click();
+    })
+    .finally(() => {
+      btn.classList.remove('saving');
+      btn.textContent = '📸 Simpan gambar';
+    });
+}
+
+/* ══════════════════════════════
+   RESET
+══════════════════════════════ */
+function resetAll() {
+  pickedDates       = [];
+  customActivities  = [];
+  const tagsEl = document.getElementById('custom-tags');
+  if (tagsEl) tagsEl.innerHTML = '';
+  const inputEl = document.getElementById('custom-activity-input');
+  if (inputEl) inputEl.value = '';
+  cal.start   = null;
+  cal.end     = null;
+  cal.year    = TODAY.getFullYear();
+  cal.month   = TODAY.getMonth();
+  cal.hour    = 9;
+  cal.min     = 0;
+
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+
+  document.querySelectorAll('.date-card').forEach(c => c.classList.remove('picked'));
+  renderTime();
+
+  const lanjutS2 = document.getElementById('btn-lanjut-s2');
+  lanjutS2.disabled    = true;
+  lanjutS2.textContent = 'Pilih dulu yuk~ 💕';
+
+  nextStep(1);
+}
+
+/* ══════════════════════════════
+   CONFETTI
+══════════════════════════════ */
+function fireConfetti() {
+  const cv  = document.getElementById('confetti');
+  const ctx = cv.getContext('2d');
+  cv.width  = window.innerWidth; cv.height = window.innerHeight;
+  const colors = ['#F7C5D0','#E8849A','#C85470','#FFB3C6','#FF8FA8','#FFD6E4','#FFC2D4'];
+  const parts  = Array.from({ length: 130 }, () => ({
+    x: Math.random() * cv.width, y: -20 - Math.random() * 220,
+    size: 5 + Math.random() * 9, color: colors[Math.random() * colors.length | 0],
+    shape: ['heart','circle','rect'][Math.random() * 3 | 0],
+    vy: 2 + Math.random() * 4, vx: (Math.random() - .5) * 2.5,
+    rot: Math.random() * Math.PI * 2, rotSpd: (Math.random() - .5) * .09, alpha: 1,
+  }));
+  function heart(x, y, s, c) {
+    ctx.save(); ctx.fillStyle = c; ctx.beginPath();
+    ctx.moveTo(x, y+s*.25);
+    ctx.bezierCurveTo(x,y,x-s*.5,y,x-s*.5,y+s*.25);
+    ctx.bezierCurveTo(x-s*.5,y+s*.5,x,y+s*.75,x,y+s);
+    ctx.bezierCurveTo(x,y+s*.75,x+s*.5,y+s*.5,x+s*.5,y+s*.25);
+    ctx.bezierCurveTo(x+s*.5,y,x,y,x,y+s*.25);
+    ctx.fill(); ctx.restore();
+  }
+  let f = 0;
+  (function loop() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts.forEach(p => {
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.rotSpd;
+      if (p.y > cv.height*.65) p.alpha -= .018;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if (p.shape==='heart') heart(-p.size/2,-p.size/2,p.size,p.color);
+      else if (p.shape==='circle') { ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); }
+      else { ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2); }
+      ctx.restore();
+    });
+    if (++f < 210) requestAnimationFrame(loop);
+    else ctx.clearRect(0, 0, cv.width, cv.height);
+  })();
+}
+</script>
+</body>
+</html>
