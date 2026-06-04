@@ -400,12 +400,15 @@
       .section-title  { font-size: clamp(1.5rem, 5.5vw, 1.9rem); margin-bottom: .1rem; }
       .section-sub    { margin-bottom: .75rem; font-size: .88rem; }
 
-      /* ── Time picker: native input on mobile ── */
-      .time-picker-wrap  { padding: .7rem .9rem .8rem; margin-top: .65rem; }
-      .time-picker-label { font-size: .88rem; margin-bottom: .55rem; }
+      /* ── Time picker: native on mobile, chips tetap ── */
+      .time-picker-wrap  { padding: .9rem 1rem 1rem; margin-top: 0; box-shadow: none;
+                           background: transparent; }
+      .time-picker-label { font-size: 1rem; margin-bottom: .75rem; }
       #time-spinner      { display: none; }
-      #time-chips        { display: none; }
-      .time-native-row   { display: flex; }
+      .time-native-row   { display: flex; margin-bottom: .1rem; }
+      .time-native-input { font-size: 2rem; padding: .6rem 1.2rem; }
+      .time-quick        { margin-top: 1rem; gap: .5rem; }
+      .time-chip         { padding: .4rem .85rem; font-size: .82rem; }
 
       /* Custom activity */
       .custom-activity-wrap { padding: .8rem .9rem; margin-top: .75rem; }
@@ -533,12 +536,19 @@
       <div id="cal-render"></div>
       <p class="cal-range-info" id="cal-info">pilih tanggal mulai 📅</p>
     </div>
+    <button class="btn-lanjut" id="btn-lanjut-s3" disabled onclick="nextStep(4)">
+      Lanjut →
+    </button>
+  </div>
 
-    <!-- Time picker -->
-    <div class="time-picker-wrap">
-      <span class="time-picker-label">⏰ mulai jam berapa?</span>
+  <!-- ── STEP 4: Time picker ── -->
+  <div class="step" id="s4">
+    <span class="hero-emoji" style="animation-delay:.1s">⏰</span>
+    <p class="section-title">Mulai jam berapa?</p>
+    <p class="section-sub">pilih waktu yang pas buat kita~</p>
 
-      <!-- Desktop: spinner + chips -->
+    <div class="time-picker-wrap" style="text-align:center">
+      <!-- Desktop: spinner -->
       <div class="time-picker" id="time-spinner">
         <div class="time-unit">
           <button class="time-spin-btn" onclick="adjustTime('hour',1)">▲</button>
@@ -554,6 +564,15 @@
           <span class="time-unit-label">menit</span>
         </div>
       </div>
+
+      <!-- Mobile: native input -->
+      <div class="time-native-row" id="time-native-row">
+        <input type="time" class="time-native-input" id="tp-native" value="09:00"
+          onchange="setTimeFromNative(this.value)" />
+        <span class="time-native-wib">WIB</span>
+      </div>
+
+      <!-- Quick chips (selalu tampil) -->
       <div class="time-quick" id="time-chips">
         <button class="time-chip" onclick="setTimeQuick(8,0)">08:00</button>
         <button class="time-chip" onclick="setTimeQuick(9,0)">09:00</button>
@@ -564,22 +583,15 @@
         <button class="time-chip" onclick="setTimeQuick(19,0)">19:00</button>
         <button class="time-chip" onclick="setTimeQuick(20,0)">20:00</button>
       </div>
-
-      <!-- Mobile: native time input -->
-      <div class="time-native-row" id="time-native-row">
-        <input type="time" class="time-native-input" id="tp-native" value="09:00"
-          onchange="setTimeFromNative(this.value)" />
-        <span class="time-native-wib">WIB</span>
-      </div>
     </div>
 
-    <button class="btn-lanjut" id="btn-lanjut-s3" disabled onclick="confirmDate()">
+    <button class="btn-lanjut" onclick="confirmDate()">
       Lanjut →
     </button>
   </div>
 
-  <!-- ── STEP 4: Confirmation ── -->
-  <div class="step" id="s4">
+  <!-- ── STEP 5: Confirmation ── -->
+  <div class="step" id="s5">
     <div class="card" id="confirm-card">
       <span class="big-heart">💖</span>
       <p class="confirm-title">Yaaay! It's a date!</p>
@@ -738,7 +750,8 @@ function nextStep(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   btnNo.style.display = 'none'; noReady = false;
   if (n === 1) setTimeout(placeNoNearYes, 80);
-  if (n === 3) { cal.start = null; cal.end = null; renderCal(); renderTime(); }
+  if (n === 3) { cal.start = null; cal.end = null; renderCal(); }
+  if (n === 4) { renderTime(); }
 }
 
 /* ══════════════════════════════
@@ -900,7 +913,7 @@ function renderTime() {
 }
 
 function confirmDate() {
-  nextStep(4);
+  nextStep(5);
   buildConfirm();
   startCountdown();
   fireConfetti();
