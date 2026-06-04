@@ -276,6 +276,22 @@
     .time-chip:hover    { background: rgba(247,197,208,.55); border-color: var(--rose); color: var(--deep-rose); }
     .time-chip.selected { background: linear-gradient(135deg,var(--rose),var(--deep-rose)); border-color: transparent; color: #fff; }
 
+    /* Native time input — shown only on mobile */
+    .time-native-row { display: none; align-items: center; justify-content: center; gap: .75rem; }
+    .time-native-input {
+      font-size: 1.7rem; font-family: 'Cormorant Garamond', serif; font-weight: 600;
+      color: var(--text-dark); background: var(--cream);
+      border: 1.5px solid var(--blush); border-radius: 14px;
+      padding: .5rem 1rem; outline: none; cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .time-native-input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232,132,154,.15); }
+    .time-native-wib {
+      font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 700;
+      color: var(--mauve); letter-spacing: .06em; text-transform: uppercase;
+    }
+
     /* ── Custom activity input ── */
     .custom-activity-wrap {
       width: 100%; margin-top: 1rem;
@@ -344,7 +360,7 @@
         padding-top: max(1.5rem, env(safe-area-inset-top));
         padding-left: 1rem;
         padding-right: 1rem;
-        padding-bottom: calc(5rem + env(safe-area-inset-bottom)); /* room for floating btn-no */
+        padding-bottom: calc(3.5rem + env(safe-area-inset-bottom)); /* room for floating btn-no */
       }
       .step { max-width: 100%; gap: .75rem; }
 
@@ -372,26 +388,24 @@
       .date-card .lbl  { font-size: .78rem; }
 
       /* Calendar */
-      .cal-wrapper { padding: .85rem .45rem; }
-      .cal-day  { width: 38px; height: 38px; font-size: .84rem; }
-      .cal-cell { padding: 1px 0; }
+      .cal-wrapper    { padding: .7rem .4rem .75rem; }
+      .cal-day        { width: 36px; height: 36px; font-size: .82rem; }
+      .cal-cell       { padding: 1px 0; }
       .cal-cell.in-range::before,
       .cal-cell.range-start::before,
-      .cal-cell.range-end::before { height: 38px; }
-      .cal-dname      { font-size: .57rem; padding-bottom: .4rem; }
-      .cal-nav        { width: 36px; height: 36px; font-size: 1.25rem; }
-      .cal-range-info { font-size: .78rem; }
+      .cal-cell.range-end::before { height: 36px; }
+      .cal-dname      { font-size: .56rem; padding-bottom: .35rem; }
+      .cal-nav        { width: 34px; height: 34px; font-size: 1.2rem; }
+      .cal-range-info { font-size: .76rem; margin-top: .65rem; }
+      .section-title  { font-size: clamp(1.5rem, 5.5vw, 1.9rem); margin-bottom: .1rem; }
+      .section-sub    { margin-bottom: .75rem; font-size: .88rem; }
 
-      /* ── Time picker: compact horizontal layout ── */
-      .time-picker-wrap { padding: .75rem .9rem .85rem; margin-top: .75rem; }
-      .time-picker-label { font-size: .88rem; margin-bottom: .6rem; }
-      .time-picker      { gap: .4rem; }
-      .time-spin-btn    { width: 36px; height: 36px; font-size: 1rem; }
-      .time-display     { font-size: 1.65rem; min-width: 2.2ch; }
-      .time-colon       { font-size: 1.65rem; padding-bottom: .15rem; }
-      .time-unit-label  { font-size: .55rem; }
-      .time-quick       { gap: .35rem; margin-top: .65rem; }
-      .time-chip        { padding: .28rem .6rem; font-size: .74rem; }
+      /* ── Time picker: native input on mobile ── */
+      .time-picker-wrap  { padding: .7rem .9rem .8rem; margin-top: .65rem; }
+      .time-picker-label { font-size: .88rem; margin-bottom: .55rem; }
+      #time-spinner      { display: none; }
+      #time-chips        { display: none; }
+      .time-native-row   { display: flex; }
 
       /* Custom activity */
       .custom-activity-wrap { padding: .8rem .9rem; margin-top: .75rem; }
@@ -523,7 +537,9 @@
     <!-- Time picker -->
     <div class="time-picker-wrap">
       <span class="time-picker-label">⏰ mulai jam berapa?</span>
-      <div class="time-picker">
+
+      <!-- Desktop: spinner + chips -->
+      <div class="time-picker" id="time-spinner">
         <div class="time-unit">
           <button class="time-spin-btn" onclick="adjustTime('hour',1)">▲</button>
           <span class="time-display" id="tp-hour">09</span>
@@ -547,6 +563,13 @@
         <button class="time-chip" onclick="setTimeQuick(17,0)">17:00</button>
         <button class="time-chip" onclick="setTimeQuick(19,0)">19:00</button>
         <button class="time-chip" onclick="setTimeQuick(20,0)">20:00</button>
+      </div>
+
+      <!-- Mobile: native time input -->
+      <div class="time-native-row" id="time-native-row">
+        <input type="time" class="time-native-input" id="tp-native" value="09:00"
+          onchange="setTimeFromNative(this.value)" />
+        <span class="time-native-wib">WIB</span>
       </div>
     </div>
 
@@ -857,10 +880,20 @@ function setTimeQuick(h, m) {
   renderTime();
 }
 
+function setTimeFromNative(val) {
+  const [h, m] = val.split(':').map(Number);
+  cal.hour = h; cal.min = m;
+  renderTime();
+}
+
 function renderTime() {
-  document.getElementById('tp-hour').textContent = String(cal.hour).padStart(2, '0');
-  document.getElementById('tp-min').textContent  = String(cal.min).padStart(2, '0');
-  const timeStr = `${String(cal.hour).padStart(2,'0')}:${String(cal.min).padStart(2,'0')}`;
+  const hh = String(cal.hour).padStart(2, '0');
+  const mm = String(cal.min).padStart(2, '0');
+  document.getElementById('tp-hour').textContent = hh;
+  document.getElementById('tp-min').textContent  = mm;
+  const native = document.getElementById('tp-native');
+  if (native) native.value = `${hh}:${mm}`;
+  const timeStr = `${hh}:${mm}`;
   document.querySelectorAll('.time-chip').forEach(chip => {
     chip.classList.toggle('selected', chip.textContent.trim() === timeStr);
   });
