@@ -101,11 +101,12 @@
     .btn-yes:disabled { opacity: .4; cursor: not-allowed; }
 
     #btn-no {
-      position: fixed; background: transparent; color: var(--mauve);
+      position: fixed; background: rgba(255,250,247,.92); color: var(--mauve);
       border: 1.5px solid var(--blush); padding: .9rem 2.2rem; border-radius: 50px;
       font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 500;
       cursor: pointer; white-space: nowrap; z-index: 999; display: none;
       transition: left .22s cubic-bezier(.34,1.56,.64,1), top .22s cubic-bezier(.34,1.56,.64,1);
+      backdrop-filter: blur(4px);
     }
 
     .btn-lanjut {
@@ -332,109 +333,115 @@
     button { touch-action: manipulation; }
     input  { touch-action: manipulation; }
 
-    /* ── Small phones (≤ 480px) ── */
-    @media (max-width: 480px) {
+    /* ── Mobile (≤ 600px) ── */
+    @media (max-width: 600px) {
 
-      /* Layout */
+      /* Layout: flex-start so long pages scroll naturally */
       .wrap {
         min-height: 100dvh;
         justify-content: flex-start;
         align-items: stretch;
-        padding: max(1.25rem, env(safe-area-inset-top)) 1rem
-                 calc(1.5rem + env(safe-area-inset-bottom));
+        padding-top: max(1.5rem, env(safe-area-inset-top));
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: calc(5rem + env(safe-area-inset-bottom)); /* room for floating btn-no */
       }
-      .step { max-width: 100%; gap: .6rem; }
+      .step { max-width: 100%; gap: .75rem; }
 
       /* Card */
       .card { padding: 1.75rem 1.2rem; border-radius: 20px; }
 
       /* Typography */
       .section-title { margin-bottom: .15rem; }
-      .section-sub   { margin-bottom: 1rem; font-size: .92rem; }
+      .section-sub   { margin-bottom: 1rem; font-size: .9rem; }
       .label-top     { font-size: .88rem; }
-      .title-main    { font-size: clamp(1.75rem, 7vw, 2.2rem); margin-bottom: 1.3rem; }
+      .title-main    { font-size: clamp(1.7rem, 6.5vw, 2.2rem); margin-bottom: 1.3rem; }
       .hint          { font-size: .8rem; margin-bottom: 1.2rem; }
 
-      /* Buttons – full width & bigger tap target */
+      /* Buttons – full width */
       .btn-yes    { width: 100%; padding: 1rem; font-size: 1rem; }
       .btn-lanjut { width: 100%; padding: 1rem; font-size: .95rem; margin-top: .85rem; }
 
-      /* Prevent iOS zoom on input focus */
-      .custom-activity-input,
-      .name-input { font-size: 16px; }
+      /* Prevent iOS zoom on focus */
+      .custom-activity-input, .name-input { font-size: 16px; }
 
-      /* Activity grid – 2 cols on mobile */
+      /* Activity grid – 2 cols */
       .cards-grid { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
       .date-card  { padding: 1rem .6rem; border-radius: 14px; }
-      .date-card .icon { font-size: 2rem; margin-bottom: .4rem; }
+      .date-card .icon { font-size: 1.9rem; margin-bottom: .35rem; }
       .date-card .lbl  { font-size: .78rem; }
 
-      /* Calendar – bigger touch targets */
-      .cal-wrapper { padding: .9rem .5rem .9rem; }
-      .cal-day  { width: 38px; height: 38px; font-size: .85rem; }
+      /* Calendar */
+      .cal-wrapper { padding: .85rem .45rem; }
+      .cal-day  { width: 38px; height: 38px; font-size: .84rem; }
       .cal-cell { padding: 1px 0; }
       .cal-cell.in-range::before,
       .cal-cell.range-start::before,
       .cal-cell.range-end::before { height: 38px; }
-      .cal-dname    { font-size: .58rem; padding-bottom: .45rem; }
-      .cal-nav      { width: 36px; height: 36px; font-size: 1.3rem; }
-      .cal-range-info { font-size: .8rem; }
+      .cal-dname      { font-size: .57rem; padding-bottom: .4rem; }
+      .cal-nav        { width: 36px; height: 36px; font-size: 1.25rem; }
+      .cal-range-info { font-size: .78rem; }
 
-      /* Time picker – bigger spin buttons */
-      .time-picker-wrap { padding: .85rem .85rem 1rem; }
-      .time-spin-btn    { width: 42px; height: 42px; font-size: 1.25rem; }
-      .time-display     { font-size: 2.4rem; min-width: 2.6ch; }
-      .time-colon       { font-size: 2.4rem; }
-      .time-chip        { padding: .35rem .7rem; font-size: .77rem; }
+      /* ── Time picker: compact horizontal layout ── */
+      .time-picker-wrap { padding: .75rem .9rem .85rem; margin-top: .75rem; }
+      .time-picker-label { font-size: .88rem; margin-bottom: .6rem; }
+      .time-picker      { gap: .4rem; }
+      .time-spin-btn    { width: 36px; height: 36px; font-size: 1rem; }
+      .time-display     { font-size: 1.65rem; min-width: 2.2ch; }
+      .time-colon       { font-size: 1.65rem; padding-bottom: .15rem; }
+      .time-unit-label  { font-size: .55rem; }
+      .time-quick       { gap: .35rem; margin-top: .65rem; }
+      .time-chip        { padding: .28rem .6rem; font-size: .74rem; }
 
       /* Custom activity */
-      .custom-activity-wrap  { padding: .85rem .9rem; }
-      .btn-add-activity      { width: 42px; height: 42px; font-size: 1.4rem; }
+      .custom-activity-wrap { padding: .8rem .9rem; margin-top: .75rem; }
+      .custom-activity-label { font-size: .88rem; }
+      .btn-add-activity { width: 40px; height: 40px; font-size: 1.3rem; }
 
       /* Confirmation */
-      .big-heart     { font-size: 4rem; }
-      .confirm-title { font-size: 2rem; }
-      .confirm-body  { font-size: 1.1rem; }
-      .confirm-row   { font-size: .84rem; }
-      .confirm-note  { font-size: 1.05rem; }
-      .confirm-box   { padding: .85rem 1rem; }
+      .big-heart     { font-size: 3.8rem; margin-bottom: .35rem; }
+      .confirm-title { font-size: 1.9rem; }
+      .confirm-body  { font-size: 1.05rem; margin-bottom: 1rem; }
+      .confirm-row   { font-size: .83rem; padding: .3rem 0; }
+      .confirm-note  { font-size: 1rem; margin-bottom: 1rem; }
+      .confirm-box   { padding: .8rem .95rem; margin-bottom: .85rem; }
 
       /* Countdown */
-      .cd-num  { font-size: 1.65rem; }
-      .cd-unit { min-width: 38px; }
-      .cd-sep  { font-size: 1.3rem; }
+      .cd-wrap { padding: .75rem .85rem; margin-bottom: 1rem; }
+      .cd-num  { font-size: 1.55rem; }
+      .cd-unit { min-width: 36px; }
+      .cd-sep  { font-size: 1.25rem; }
+      .cd-lbl  { font-size: .55rem; }
 
-      /* Share & action buttons – stack vertically */
-      .share-group { flex-direction: column; gap: .6rem; }
-      .btn-wa, .btn-copy {
-        width: 100%; justify-content: center;
-        padding: .9rem 1rem;
-      }
-      .action-row { gap: .5rem; }
-      .btn-sm { flex: 1; justify-content: center; font-size: .8rem; padding: .6rem .8rem; }
+      /* Share & action buttons */
+      .share-group { flex-direction: column; gap: .55rem; }
+      .btn-wa, .btn-copy { width: 100%; justify-content: center; padding: .88rem 1rem; }
+      .action-row { gap: .5rem; margin-top: .6rem; }
+      .btn-sm     { flex: 1; justify-content: center; font-size: .8rem; padding: .58rem .7rem; }
     }
 
     /* ── Very small phones (≤ 360px) ── */
     @media (max-width: 360px) {
       .wrap { padding-left: .75rem; padding-right: .75rem; }
-      .cal-day { width: 34px; height: 34px; font-size: .78rem; }
+      .cal-day { width: 34px; height: 34px; font-size: .77rem; }
       .cal-cell.in-range::before,
       .cal-cell.range-start::before,
       .cal-cell.range-end::before { height: 34px; }
-      .time-display { font-size: 2rem; }
-      .time-colon   { font-size: 2rem; }
-      .cd-num       { font-size: 1.45rem; }
-      .cd-unit      { min-width: 32px; }
+      .time-display { font-size: 1.45rem; }
+      .time-colon   { font-size: 1.45rem; }
+      .time-spin-btn { width: 32px; height: 32px; }
+      .cd-num { font-size: 1.35rem; }
+      .cd-unit { min-width: 30px; }
     }
 
     /* ── Landscape mobile ── */
-    @media (max-width: 812px) and (orientation: landscape) and (max-height: 430px) {
-      .wrap { justify-content: flex-start; padding-top: .75rem; }
-      .hero-emoji   { font-size: 2.2rem; margin-bottom: .5rem; }
-      .title-main   { font-size: 1.8rem; margin-bottom: 1rem; }
-      .big-heart    { font-size: 3rem; margin-bottom: .3rem; }
-      .cd-num       { font-size: 1.4rem; }
-      .section-sub  { margin-bottom: .7rem; }
+    @media (max-width: 900px) and (orientation: landscape) and (max-height: 450px) {
+      .wrap { justify-content: flex-start; padding-top: .6rem; }
+      .hero-emoji  { font-size: 2rem; margin-bottom: .4rem; }
+      .title-main  { font-size: 1.7rem; margin-bottom: .9rem; }
+      .big-heart   { font-size: 2.8rem; }
+      .cd-num      { font-size: 1.35rem; }
+      .section-sub { margin-bottom: .65rem; }
     }
   </style>
 </head>
@@ -634,20 +641,24 @@ const BG = document.getElementById('bgLayer');
 const btnNo  = document.getElementById('btn-no');
 const btnYes = document.getElementById('btn-yes-s1');
 
-const isMobile = () => window.innerWidth <= 480 || ('ontouchstart' in window && window.innerWidth <= 768);
+const isMobile = () => window.innerWidth <= 600;
 
 function placeNoNearYes() {
-  const r   = btnYes.getBoundingClientRect();
   const noH = btnNo.offsetHeight || 44;
   const noW = btnNo.offsetWidth  || 130;
 
   if (isMobile()) {
-    /* on mobile: place below the yes button, centred */
-    btnNo.style.position = 'fixed';
-    btnNo.style.left = `${r.left + (r.width - noW) / 2}px`;
-    btnNo.style.top  = `${r.bottom + 14}px`;
+    /* mobile: anchor to bottom-center of viewport, above browser chrome */
+    btnNo.style.left      = `${(window.innerWidth - noW) / 2}px`;
+    btnNo.style.top       = 'auto';
+    btnNo.style.bottom    = `${Math.max(24, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sab') || '0') + 24)}px`;
+    /* override bottom via inline top so transition still works */
+    const bottomY = window.innerHeight - noH - 28;
+    btnNo.style.top    = `${bottomY}px`;
+    btnNo.style.bottom = '';
   } else {
-    /* desktop: start to the right */
+    /* desktop: start to the right of yes button */
+    const r = btnYes.getBoundingClientRect();
     btnNo.style.left = `${r.right + 14}px`;
     btnNo.style.top  = `${r.top + (r.height - noH) / 2}px`;
   }
@@ -663,7 +674,17 @@ window.addEventListener('resize', () => {
 });
 
 function randPos() {
-  const pad = 70, w = btnNo.offsetWidth || 130, h = btnNo.offsetHeight || 44;
+  const w = btnNo.offsetWidth || 130, h = btnNo.offsetHeight || 44;
+  if (isMobile()) {
+    /* stay in bottom 40% of screen so it doesn't cover main content */
+    const minY = window.innerHeight * 0.55;
+    const maxY = window.innerHeight - h - 24;
+    return {
+      x: 12 + Math.random() * (window.innerWidth - w - 24),
+      y: minY + Math.random() * Math.max(0, maxY - minY),
+    };
+  }
+  const pad = 70;
   return {
     x: pad + Math.random() * (window.innerWidth  - w - pad * 2),
     y: pad + Math.random() * (window.innerHeight - h - pad * 2),
